@@ -71,12 +71,12 @@ git push origin main                      # publish: signature + DHT announcemen
 
 ## Common Errors
 
-| Message | Cause / Fix |
-|---|---|
-| `SmartNet client not running (no discovery file…)` | Open the SmartNet app and try again. |
-| `Wallet locked — unlock with PIN in the client` | Unlock the wallet in the client (push is signed with your key). |
-| `push is allowed only to your own repositories` | The URL points to someone else's username. |
-| `repository seeders are currently offline` | No peer with the bundle is online — try again later. |
-| `git not found in PATH` | Install git / add it to PATH. |
+| Message                                           | Cause / Fix |
+|---------------------------------------------------|---|
+| `NETFORY client not running (no discovery file…)` | Open the NETFORY app and try again. |
+| `Wallet locked — unlock with PIN in the client`   | Unlock the wallet in the client (push is signed with your key). |
+| `push is allowed only to your own repositories`   | The URL points to someone else's username. |
+| `repository seeders are currently offline`        | No peer with the bundle is online — try again later. |
+| `git not found in PATH`                           | Install git / add it to PATH. |
 
 Detailed architecture description: `docs/09-DevHub-Git-Remote-Helper.md`.
