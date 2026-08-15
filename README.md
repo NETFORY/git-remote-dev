@@ -1,82 +1,82 @@
 # git-remote-dev
 
-**Git Remote Helper для протокола `dev://` сети SmartNet.**
-Даёт привычные команды `git clone / push / pull dev://user/repo` - без
-переучивания, с нативной поддержкой в любой IDE (VS Code, WebStorm,
-GitKraken), потому что проектом управляет ваш стандартный бинарник `git`.
+**Git Remote Helper for the `dev://` protocol of the NETFORY network.**
+Provides familiar `git clone / push / pull dev://user/repo` commands — no
+relearning required, with native support in any IDE (VS Code, WebStorm,
+GitKraken), because the project is managed by your standard `git` binary.
 
-## Требования
+## Requirements
 
-- `git` ≥ 2.30 в `PATH` (мост использует `git bundle` под капотом);
-- запущенный **клиент SmartNet** с разблокированным кошельком -
-  мост общается с ним через loopback-IPC (порт/токен берёт из
-  discovery-файла, см. ниже);
-- Rust toolchain - только для сборки.
+- `git` ≥ 2.30 in `PATH` (the bridge uses `git bundle` under the hood);
+- a running **NETFORY client** with an unlocked wallet —
+  the bridge communicates with it via loopback IPC (takes port/token from
+  the discovery file, see below);
+- Rust toolchain — only for building.
 
-## Сборка и установка
+## Building and Installing
 
 ```bash
 cargo build --release
 ```
 
-Положите бинарник в каталог из `PATH` **строго под именем** `git-remote-dev`
-(git ищет хелпер по схеме URL: `dev://` → `git-remote-dev`):
+Place the binary in a directory from `PATH` **strictly named** `git-remote-dev`
+(git looks for the helper by URL scheme: `dev://` → `git-remote-dev`):
 
 ```bash
 # Linux / macOS
 install -m 0755 target/release/git-remote-dev ~/.local/bin/git-remote-dev
-# проверьте, что ~/.local/bin в PATH:  echo $PATH
+# make sure ~/.local/bin is in PATH:  echo $PATH
 
 # Windows (PowerShell)
 copy target\release\git-remote-dev.exe C:\Users\<you>\bin\git-remote-dev.exe
-# каталог C:\Users\<you>\bin должен быть в %PATH%
+# directory C:\Users\<you>\bin must be in %PATH%
 ```
 
-Проверка установки:
+Verify installation:
 
 ```bash
-git clone dev://<ваш-username>/<ваш-репозиторий>
+git clone dev://<your-username>/<your-repository>
 ```
 
-## Настройка
+## Configuration
 
-Настройки не нужны. Мост сам находит работающий клиент через discovery-файл,
-который клиент пишет при старте:
+No configuration needed. The bridge automatically finds the running client via
+the discovery file, which the client writes on startup:
 
-| ОС | Путь |
+| OS | Path |
 |---|---|
 | Linux / macOS | `~/.config/smartnet/devhub-ipc.json` |
 | Windows | `%APPDATA%\smartnet\devhub-ipc.json` |
 
-Содержимое: `{"port": <loopback-порт>, "token": "<случайный токен>"}`.
-Токен защищает IPC от чужих локальных процессов; сервер слушает **только**
-`127.0.0.1`.
+Contents: `{"port": <loopback-port>, "token": "<random-token>"}`.
+The token protects IPC from other local processes; the server listens **only**
+on `127.0.0.1`.
 
-## Использование
+## Usage
 
 ```bash
-git clone dev://technolog/smart-swarm     # клонировать из P2P-сети
+git clone dev://technolog/smart-swarm     # clone from P2P network
 cd smart-swarm
-git add . && git commit -m "feat: …"      # обычная локальная работа
-git push origin main                      # опубликовать: подпись + DHT-анонс
+git add . && git commit -m "feat: …"      # regular local work
+git push origin main                      # publish: signature + DHT announcement
 ```
 
-- `git push` в ещё не существующее имя репозитория **автосоздаёт** его
-  в вашем аккаунте (как на GitHub).
-- Каждый push увеличивает подписанный счётчик `seq` вашего индекса -
-  анти-откат: сеть никогда не примет более старую версию.
-- Клонирование чужих репозиториев работает через swarm-загрузку
-  bundle'ов по подписанному `bundle_hash` (сидеры находятся через
-  Mainline DHT + UDP identity-биконы).
+- `git push` to a repository name that doesn't exist yet **auto-creates** it
+  in your account (like on GitHub).
+- Each push increments the signed `seq` counter of your index —
+  anti-rollback: the network will never accept an older version.
+- Cloning someone else's repositories works via swarm downloading
+  bundles by signed `bundle_hash` (seeders are found through
+  Mainline DHT + UDP identity beacons).
 
-## Типичные ошибки
+## Common Errors
 
-| Сообщение | Причина / решение |
+| Message | Cause / Fix |
 |---|---|
-| `клиент SmartNet не запущен (нет discovery-файла…)` | Откройте приложение SmartNet и повторите. |
-| `Кошелёк заблокирован - разблокируйте PIN-кодом в клиенте` | Разблокируйте кошелёк в клиенте (push подписывается вашим ключом). |
-| `push разрешён только в свои репозитории` | URL указывает на чужой username. |
-| `сидеры репозитория сейчас офлайн` | Ни один пир с bundle'ом не в сети - попробуйте позже. |
-| `git не найден в PATH` | Установите git / добавьте в PATH. |
+| `SmartNet client not running (no discovery file…)` | Open the SmartNet app and try again. |
+| `Wallet locked — unlock with PIN in the client` | Unlock the wallet in the client (push is signed with your key). |
+| `push is allowed only to your own repositories` | The URL points to someone else's username. |
+| `repository seeders are currently offline` | No peer with the bundle is online — try again later. |
+| `git not found in PATH` | Install git / add it to PATH. |
 
-Подробное описание архитектуры: `docs/09-DevHub-Git-Remote-Helper.md`.
+Detailed architecture description: `docs/09-DevHub-Git-Remote-Helper.md`.
