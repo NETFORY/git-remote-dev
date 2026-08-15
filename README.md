@@ -1,17 +1,17 @@
 # git-remote-dev
 
 **Git Remote Helper for the `dev://` protocol of the NETFORY network.**
-Provides familiar `git clone / push / pull dev://user/repo` commands — no
+Provides familiar `git clone / push / pull dev://user/repo` commands - no
 relearning required, with native support in any IDE (VS Code, WebStorm,
 GitKraken), because the project is managed by your standard `git` binary.
 
 ## Requirements
 
 - `git` ≥ 2.30 in `PATH` (the bridge uses `git bundle` under the hood);
-- a running **NETFORY client** with an unlocked wallet —
+- a running **NETFORY client** with an unlocked wallet -
   the bridge communicates with it via loopback IPC (takes port/token from
   the discovery file, see below);
-- Rust toolchain — only for building.
+- Rust toolchain - only for building.
 
 ## Building and Installing
 
@@ -63,7 +63,7 @@ git push origin main                      # publish: signature + DHT announcemen
 
 - `git push` to a repository name that doesn't exist yet **auto-creates** it
   in your account (like on GitHub).
-- Each push increments the signed `seq` counter of your index —
+- Each push increments the signed `seq` counter of your index -
   anti-rollback: the network will never accept an older version.
 - Cloning someone else's repositories works via swarm downloading
   bundles by signed `bundle_hash` (seeders are found through
@@ -74,9 +74,9 @@ git push origin main                      # publish: signature + DHT announcemen
 | Message                                           | Cause / Fix |
 |---------------------------------------------------|---|
 | `NETFORY client not running (no discovery file…)` | Open the NETFORY app and try again. |
-| `Wallet locked — unlock with PIN in the client`   | Unlock the wallet in the client (push is signed with your key). |
+| `Wallet locked - unlock with PIN in the client`   | Unlock the wallet in the client (push is signed with your key). |
 | `push is allowed only to your own repositories`   | The URL points to someone else's username. |
-| `repository seeders are currently offline`        | No peer with the bundle is online — try again later. |
+| `repository seeders are currently offline`        | No peer with the bundle is online - try again later. |
 | `git not found in PATH`                           | Install git / add it to PATH. |
 
 Detailed architecture description: `docs/09-DevHub-Git-Remote-Helper.md`.
