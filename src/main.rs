@@ -1,11 +1,11 @@
 // ============================================================
-//  NETFORY // git-remote-dev — Git Remote Helper для протокола dev://.
+//  SmartNet // git-remote-dev - Git Remote Helper для протокола dev://.
 //
 //  Git из коробки умеет незнакомые схемы: увидев `dev://`, он ищет в PATH
 //  бинарник `git-remote-dev` и передаёт ему управление (протокол
 //  gitremote-helpers(7) через stdin/stdout). Утилита ультра-лёгкая: живёт
 //  ровно на время clone/push/pull и общается с запущенным клиентом SmartNet
-//  через loopback-IPC (порт и токен — в ~/.config/smartnet/devhub-ipc.json).
+//  через loopback-IPC (порт и токен - в ~/.config/smartnet/devhub-ipc.json).
 //
 //  Воркфлоу разработчика НЕ меняется:
 //      git clone dev://technolog/smart-swarm
@@ -61,7 +61,7 @@ fn discovery() -> Discovery {
     };
     let path = base.join("smartnet").join("devhub-ipc.json");
     let raw = std::fs::read_to_string(&path).unwrap_or_else(|_| {
-        die("клиент SmartNet не запущен (нет discovery-файла devhub-ipc.json) — откройте приложение и повторите")
+        die("клиент SmartNet не запущен (нет discovery-файла devhub-ipc.json) - откройте приложение и повторите")
     });
     serde_json::from_str(&raw).unwrap_or_else(|_| die("повреждён devhub-ipc.json"))
 }
